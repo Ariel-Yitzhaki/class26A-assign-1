@@ -23,17 +23,17 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/heart1.1"
+                    android:id="@+id/heart1_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_heart"/>
                 <ImageView
-                    android:id="@+id/heart1.2"
+                    android:id="@+id/heart1_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_heart"/>
                 <ImageView
-                    android:id="@+id/heart1.3"
+                    android:id="@+id/heart1_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_heart"/>
@@ -56,9 +56,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb1.1"
+                        android:id="@+id/bomb1_1"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
                 <LinearLayout
@@ -68,9 +69,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb1.2"
+                        android:id="@+id/bomb1_2"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
                 <LinearLayout
@@ -80,9 +82,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb1.3"
+                        android:id="@+id/bomb1_3"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb" />
                 </LinearLayout>
             </LinearLayout>
@@ -102,9 +105,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb2.1"
+                        android:id="@+id/bomb2_1"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
                 <LinearLayout
@@ -114,9 +118,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb2.2"
+                        android:id="@+id/bomb2_2"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
                 <LinearLayout
@@ -126,9 +131,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb2.3"
+                        android:id="@+id/bomb2_3"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
             </LinearLayout>
@@ -148,9 +154,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb3.1"
+                        android:id="@+id/bomb3_1"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
                 <LinearLayout
@@ -160,9 +167,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb3.2"
+                        android:id="@+id/bomb3_2"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
                 <LinearLayout
@@ -172,9 +180,10 @@
                     android:gravity="center_horizontal|center_vertical">
 
                     <ImageView
-                        android:id="@+id/bomb3.3"
+                        android:id="@+id/bomb3_3"
                         android:layout_width="wrap_content"
                         android:layout_height="80dp"
+                        android:visibility="invisible"
                         android:src="@drawable/ic_bomb"/>
                 </LinearLayout>
             </LinearLayout>
@@ -197,16 +206,18 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
-                            android:id="@+id/bomb4.1"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/bomb4_1"
+                            android:layout_width="match_parent"
                             android:layout_height="80dp"
-                            android:src="@drawable/ic_bomb" />
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_bomb"
+                            android:visibility="invisible" />
                         <ImageView
-                            android:id="@+id/raceCar1.1"
+                            android:id="@+id/raceCar1_1"
                             android:layout_width="wrap_content"
+                            android:visibility="invisible"
                             android:layout_height="80dp"
-                            android:src="@drawable/ic_racecar"
-                            android:rotation="270"/>
+                            android:src="@drawable/ic_racecar"/>
                     </FrameLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -218,16 +229,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <ImageView
-                            android:id="@+id/bomb4.2"
+                            android:id="@+id/bomb4_2"
                             android:layout_width="wrap_content"
                             android:layout_height="80dp"
+                            android:layout_gravity="center"
+                            android:visibility="invisible"
                             android:src="@drawable/ic_bomb"/>
                         <ImageView
-                            android:id="@+id/raceCar1.2"
+                            android:id="@+id/raceCar1_2"
                             android:layout_width="wrap_content"
                             android:layout_height="80dp"
-                            android:src="@drawable/ic_racecar"
-                            android:rotation="270"/>
+                            android:src="@drawable/ic_racecar"/>
                     </FrameLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -239,16 +251,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <ImageView
-                            android:id="@+id/bomb4.3"
+                            android:id="@+id/bomb4_3"
                             android:layout_width="wrap_content"
                             android:layout_height="80dp"
+                            android:layout_gravity="center"
+                            android:visibility="invisible"
                             android:src="@drawable/ic_bomb"/>
                         <ImageView
-                            android:id="@+id/raceCar1.3"
+                            android:id="@+id/raceCar1_3"
                             android:layout_width="wrap_content"
+                            android:visibility="invisible"
                             android:layout_height="80dp"
-                            android:src="@drawable/ic_racecar"
-                            android:rotation="270"/>
+                            android:src="@drawable/ic_racecar"/>
                     </FrameLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -1,5 +1,6 @@
 package com.example.first_assignment
 
+import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageView
@@ -9,42 +10,49 @@ class ImageAnimator(
     private val image1: ImageView,
     private val image2: ImageView,
     private val image3: ImageView,
-    private val image4: ImageView
+    private val image4: ImageView,
+    private val reachedBottom: () -> Unit
 ) {
     private var currentIndex = 0
     //looper ensures the handler runs on the main thread
-    private val handler = android.os.Handler(Looper.getMainLooper())
-    private var isRunning = false
+    private val handler = Handler(Looper.getMainLooper())
+    private var cycleCount = 0
 
     fun start() {
-        if (!isRunning) {
-            isRunning = true
-            animate()
-        }
+        currentIndex = 0
+        cycleCount = 0
+        animateBomb()
     }
 
-    fun stop() {
-        isRunning = false
-        handler.removeCallbacksAndMessages(null)
-    }
+    private fun animateBomb() {
+        if (cycleCount < 4){
+            if (currentIndex > 0) {
+                when(currentIndex - 1) {
+                    0 -> image1.visibility = View.INVISIBLE
+                    1 -> image2.visibility = View.INVISIBLE
+                    2 -> image3.visibility = View.INVISIBLE
+                    3 -> image4.visibility = View.INVISIBLE
+                }
+            }
 
-    private fun animate() {
-        if (!isRunning) return
+            when(currentIndex) {
+                0 -> image1.visibility = View.VISIBLE
+                1 -> image2.visibility = View.VISIBLE
+                2 -> image3.visibility = View.VISIBLE
+                3 -> image4.visibility = View.VISIBLE
+            }
 
-        image1.visibility = View.INVISIBLE
-        image2.visibility = View.INVISIBLE
-        image3.visibility = View.INVISIBLE
-        image4.visibility = View.INVISIBLE
-
-        when(currentIndex) {
-            0 -> image1.visibility = View.VISIBLE
-            1 -> image2.visibility = View.VISIBLE
-            2 -> image3.visibility = View.VISIBLE
-            3 -> image4.visibility = View.VISIBLE
+            currentIndex = (currentIndex + 1) % 4
+            cycleCount++
+            val delay: Long = if (cycleCount == 4){
+                reachedBottom()
+                300
+            } else 800
+            handler.postDelayed({ animateBomb() }, delay)
+        } else {
+            image4.visibility = View.INVISIBLE
         }
-
-        currentIndex = (currentIndex + 1) % 4
-        //delay the animation by 500ms
-        handler.postDelayed({ animate() }, 500)
     }
 }
+
+
