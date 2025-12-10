@@ -1,10 +1,13 @@
 package com.example.first_assignment
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.VibrationEffect
+import android.os.Vibrator
 import android.os.VibratorManager
+import android.os.Build.VERSION_CODES
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -48,26 +51,25 @@ class MainActivity : AppCompatActivity() {
         //Checking if the column is currently running
         val availableColumns = columns.indices.filter { it !in animatingColumns }
         if (availableColumns.isEmpty()) return
-
+        // The column to be animated
         val randomColumn = availableColumns.random()
         animatingColumns.add(randomColumn)
-
+        // The images in the randomColumn
         val selectedColumn = columns[randomColumn]
 
         val animator = ImageAnimator(
             selectedColumn[0],
             selectedColumn[1],
             selectedColumn[2],
-            selectedColumn[3],
-            {
-                bombsAtBottom.add(randomColumn)
-                checkCollision(randomColumn)
+            selectedColumn[3]
+        ) {
+            bombsAtBottom.add(randomColumn)
+            checkCollision(randomColumn)
 
-                handler.postDelayed({
-                    bombsAtBottom.remove(randomColumn)
-                }, 1200)
-            }
-        )
+            handler.postDelayed({
+                bombsAtBottom.remove(randomColumn)
+            }, 400)
+        }
         animator.start()
         handler.postDelayed({ animatingColumns.remove(randomColumn) }, 3200)
     }
@@ -136,15 +138,32 @@ class MainActivity : AppCompatActivity() {
                 canMove = false
                 carController.moveCar(currentLane, currentLane + 1)
                 currentLane++
+
+                if (bombsAtBottom.contains(currentLane)){
+                    checkCollision(currentLane)
+                }
+
                 handler.postDelayed({ canMove = true }, 100)
             }
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun vibrate() {
-        val vibratorManager = getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
-        val vibrator = vibratorManager.defaultVibrator
-        vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.S) {
+            // Android 12+ (API 31)
+            val vibratorManager = getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibrator = vibratorManager.defaultVibrator
+            vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
+            // Android 8+ (API 26)
+            val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            // Android 7 and below
+            val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(500)
+        }
     }
 
     private fun checkCollision(column: Int) {
@@ -153,16 +172,13 @@ class MainActivity : AppCompatActivity() {
             liveCounter--
             vibrate()
             if (liveCounter == 0) {
-                Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show()
-                gameOver()
+                Toast.makeText(this, "Game Over", Toast.LENGTH_SHORT).show()
+                lives.resetLives() // Game resets
+                liveCounter = 3
             } else {
                 Toast.makeText(this, "Watch Out!", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun gameOver() {
-        handler.removeCallbacksAndMessages(null)
     }
 }
 

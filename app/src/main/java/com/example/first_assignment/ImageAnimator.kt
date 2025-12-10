@@ -25,7 +25,7 @@ class ImageAnimator(
     }
 
     private fun animateBomb() {
-        if (cycleCount < 4){
+        if (cycleCount < 4) {
             if (currentIndex > 0) {
                 when(currentIndex - 1) {
                     0 -> image1.visibility = View.INVISIBLE
@@ -46,7 +46,7 @@ class ImageAnimator(
             cycleCount++
             val delay: Long = if (cycleCount == 4){
                 reachedBottom()
-                300
+                400
             } else 800
             handler.postDelayed({ animateBomb() }, delay)
         } else {
