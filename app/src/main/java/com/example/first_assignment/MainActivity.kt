@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var columns: Array<Array<ImageView>>
     private val handler = Handler(Looper.getMainLooper())
     private val animatingColumns = mutableSetOf<Int>()
-    private var currentLane = 1
+    private var currentLane = 2
     private lateinit var carController: CarController
     private var canMove = true
     private lateinit var lives: LivesController
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         handler.post(gameLoop)
     }
-
+    // Animates the columns
     private fun runColumn() {
         //Checking if the column is currently running
         val availableColumns = columns.indices.filter { it !in animatingColumns }
@@ -61,11 +61,13 @@ class MainActivity : AppCompatActivity() {
             selectedColumn[0],
             selectedColumn[1],
             selectedColumn[2],
-            selectedColumn[3]
-        ) {
+            selectedColumn[3],
+            selectedColumn[4],
+            selectedColumn[5]
+        ) { // Tracks what column's bomb has reached the car's row
             bombsAtBottom.add(randomColumn)
             checkCollision(randomColumn)
-
+            // Removes the bomb from the last row quicker than the default time
             handler.postDelayed({
                 bombsAtBottom.remove(randomColumn)
             }, 400)
@@ -85,7 +87,9 @@ class MainActivity : AppCompatActivity() {
         carController = CarController(
             findViewById(R.id.raceCar1_1),
             findViewById(R.id.raceCar1_2),
-            findViewById(R.id.raceCar1_3)
+            findViewById(R.id.raceCar1_3),
+            findViewById(R.id.raceCar1_4),
+            findViewById(R.id.raceCar1_5)
         )
 
         columns = arrayOf(
@@ -93,19 +97,41 @@ class MainActivity : AppCompatActivity() {
                 findViewById(R.id.bomb1_1),
                 findViewById(R.id.bomb2_1),
                 findViewById(R.id.bomb3_1),
-                findViewById(R.id.bomb4_1)
+                findViewById(R.id.bomb4_1),
+                findViewById(R.id.bomb5_1),
+                findViewById(R.id.bomb6_1)
             ),
             arrayOf(
                 findViewById(R.id.bomb1_2),
                 findViewById(R.id.bomb2_2),
                 findViewById(R.id.bomb3_2),
-                findViewById(R.id.bomb4_2)
+                findViewById(R.id.bomb4_2),
+                findViewById(R.id.bomb5_2),
+                findViewById(R.id.bomb6_2)
             ),
             arrayOf(
                 findViewById(R.id.bomb1_3),
                 findViewById(R.id.bomb2_3),
                 findViewById(R.id.bomb3_3),
-                findViewById(R.id.bomb4_3)
+                findViewById(R.id.bomb4_3),
+                findViewById(R.id.bomb5_3),
+                findViewById(R.id.bomb6_3)
+            ),
+            arrayOf(
+                findViewById(R.id.bomb1_4),
+                findViewById(R.id.bomb2_4),
+                findViewById(R.id.bomb3_4),
+                findViewById(R.id.bomb4_4),
+                findViewById(R.id.bomb5_4),
+                findViewById(R.id.bomb6_4)
+            ),
+            arrayOf(
+                findViewById(R.id.bomb1_5),
+                findViewById(R.id.bomb2_5),
+                findViewById(R.id.bomb3_5),
+                findViewById(R.id.bomb4_5),
+                findViewById(R.id.bomb5_5),
+                findViewById(R.id.bomb6_5)
             )
         )
         lives = LivesController(
@@ -133,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonRight.setOnClickListener {
-            if (canMove && currentLane < 2) {
+            if (canMove && currentLane < 4) {
                 canMove = false
                 carController.moveCar(currentLane, currentLane + 1)
                 currentLane++
