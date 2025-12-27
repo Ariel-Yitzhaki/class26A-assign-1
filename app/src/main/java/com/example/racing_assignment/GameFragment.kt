@@ -13,14 +13,13 @@ import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.os.Build.VERSION_CODES
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import kotlin.arrayOf
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 
 class GameFragment : Fragment() {
     private lateinit var columns: Array<Array<ImageView>>
@@ -32,6 +31,39 @@ class GameFragment : Fragment() {
     private lateinit var lives: LivesController
     private var liveCounter = 3
     private val bombsAtBottom = mutableSetOf<Int>()
+    private var useButtons = true
+
+    // Sensor properties
+    private var sensorManager: SensorManager? = null
+    private var accelerometer: Sensor? = null
+    private val sensorListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent) {
+            val x = event.values[0] // Tilt left/right (-10 to 10)
+
+            when {
+                x < -3 && canMove && currentLane < 4 -> {
+                    canMove = false
+                    carController.moveCar(currentLane, currentLane + 1)
+                    currentLane++
+                    if (bombsAtBottom.contains(currentLane)) {
+                        checkCollision(currentLane)
+                    }
+                    handler.postDelayed({ canMove = true }, 300)
+                }
+                x > 3 && canMove && currentLane > 0 -> {
+                    canMove = false
+                    carController.moveCar(currentLane, currentLane - 1)
+                    currentLane--
+                    if (bombsAtBottom.contains(currentLane)) {
+                        checkCollision(currentLane)
+                    }
+                    handler.postDelayed({ canMove = true }, 300)
+                }
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,12 +72,37 @@ class GameFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_game, container, false)
 
+        useButtons = arguments?.getBoolean("useButtons", true) ?: true
+
         initializeViews(view)
-        setupButtons(view)
+        if (useButtons) {
+            setupButtons(view)
+        } else {
+            view.findViewById<Button>(R.id.leftArrow).visibility = View.GONE
+            view.findViewById<Button>(R.id.rightArrow).visibility = View.GONE
+            setupSensors()
+        }
+
 
         handler.post(gameLoop)
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!useButtons) {
+            accelerometer?.let {
+                sensorManager?.registerListener(sensorListener, it, SensorManager.SENSOR_DELAY_GAME)
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (!useButtons) {
+            sensorManager?.unregisterListener(sensorListener)
+        }
     }
 
     override fun onDestroyView() {
@@ -143,6 +200,11 @@ class GameFragment : Fragment() {
         }
     }
 
+    private fun setupSensors() {
+        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    }
+
     @Suppress("DEPRECATION")
     private fun vibrate() {
         val context = requireContext()
@@ -166,12 +228,21 @@ class GameFragment : Fragment() {
             vibrate()
             if (liveCounter == 0) {
                 Toast.makeText(requireContext(), "Game Over", Toast.LENGTH_SHORT).show()
-                lives.resetLives()
-                liveCounter = 3
+                endGame()
             } else {
                 Toast.makeText(requireContext(), "Watch Out!", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+
+    private fun endGame() {
+        canMove = false
+        handler.removeCallbacksAndMessages(null)
+        if (!useButtons) {
+            sensorManager?.unregisterListener(sensorListener)
+        }
+        parentFragmentManager.popBackStack()
     }
 
     private val gameLoop = object : Runnable {

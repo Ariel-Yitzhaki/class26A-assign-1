@@ -23,18 +23,27 @@ class MenuActivity : AppCompatActivity() {
         val playSensors = findViewById<Button>(R.id.sensors)
 
         playButtons.setOnClickListener {
+            val fragment = GameFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean("useButtons", true)
+                }
+            }
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, GameFragment())
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
         }
 
         playSensors.setOnClickListener {
-            // Handle button click
+            val fragment = GameFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean("useButtons", false)
+                }
+            }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
-
-
-
-
     }
 }
