@@ -21,7 +21,7 @@ class MenuActivity : AppCompatActivity() {
 
         val playButtons = findViewById<Button>(R.id.buttons)
         val playSensors = findViewById<Button>(R.id.sensors)
-        val records = findViewById<Button>(R.id.records)
+        val playRecords = findViewById<Button>(R.id.records)
 
         playButtons.setOnClickListener {
             val fragment = GameFragment().apply {
@@ -47,8 +47,12 @@ class MenuActivity : AppCompatActivity() {
                 .commit()
         }
 
-        records.setOnClickListener {
-
+        playRecords.setOnClickListener {
+            val fragment = RecordsFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

@@ -237,11 +237,6 @@ class GameFragment : Fragment() {
 
 
     private fun endGame() {
-        canMove = false
-        handler.removeCallbacksAndMessages(null)
-        if (!useButtons) {
-            sensorManager?.unregisterListener(sensorListener)
-        }
         parentFragmentManager.popBackStack()
     }
 
